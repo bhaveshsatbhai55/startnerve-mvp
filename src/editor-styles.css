@@ -1,0 +1,59 @@
+/* editor-styles.css */
+
+/* Style the editor's main container and toolbar */
+.ql-toolbar {
+    background-color: #111827; /* Darker Gray */
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+    border-color: #4B5563 !important; /* Tailwind Gray-600 */
+}
+
+.ql-container {
+    background-color: #1F2937; /* Dark Gray */
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+    border-color: #4B5563 !important;
+}
+
+/* Style the toolbar icons */
+.ql-snow .ql-stroke {
+    stroke: #D1D5DB; /* Light Gray */
+}
+.ql-snow .ql-fill {
+    fill: #D1D5DB;
+}
+.ql-snow .ql-picker-label {
+    color: #D1D5DB;
+}
+
+/* Style the editor's content area */
+.ql-editor {
+    background-color: #1F2937;
+    color: #D1D5DB; /* Light Gray Text */
+    min-height: 500px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    padding: 20px;
+}
+
+/* Style the headings inside the editor */
+.ql-editor h2 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid #4B5563;
+}
+
+.ql-editor h4 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+/* Style paragraphs for better readability */
+.ql-editor p {
+    margin-bottom: 1em;
+    line-height: 1.7;
+}
