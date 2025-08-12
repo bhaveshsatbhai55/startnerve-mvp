@@ -6,12 +6,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './editor-styles.css';
 
-// --- MODIFIED --- The live backend URL
-const API_BASE_URL = 'https://startnerve-backend-351647131246.us-central1.run.app';
-
 // --- ICONS ---
 const Icon = ({ name, className = "w-6 h-6" }) => {
-    // ... (Icon component is unchanged)
+    // --- MODIFIED --- Added 'menu' icon
     const icons = {
         menu: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
         course: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
@@ -108,6 +105,7 @@ const EbookEditor = React.memo(({ initialContent, onExport, onBack }) => {
 
 // --- EBOOK ENGINE COMPONENT ---
 const EbookEngine = () => {
+    // ... (This component is unchanged)
     const [topic, setTopic] = useState('');
     const [audience, setAudience] = useState('');
     const [isLoadingOutline, setIsLoadingOutline] = useState(false);
@@ -147,7 +145,7 @@ const EbookEngine = () => {
         setCoverPreview(null); setCoverImagePath(null); setCurrentView('customize'); setEbookContent(null);
         if(fileInputRef.current) { fileInputRef.current.value = ""; }
         try {
-            const response = await fetch(`${API_BASE_URL}/api/generate-outline`, {
+            const response = await fetch('http://127.0.0.1:5000/api/generate-outline', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topic, audience }),
@@ -168,7 +166,7 @@ const EbookEngine = () => {
         const formData = new FormData();
         formData.append('coverImage', file);
         try {
-            const response = await fetch(`${API_BASE_URL}/api/upload-cover`, {
+            const response = await fetch('http://127.0.0.1:5000/api/upload-cover', {
                 method: 'POST',
                 body: formData,
             });
@@ -187,11 +185,11 @@ const EbookEngine = () => {
     };
     
     const handleGenerateAndEdit = async () => {
-        if (!outlineData) { setError("Please generate an outline first."); return; }
+        if (!outlineData) { setError("Please provide an outline first."); return; }
         setIsGeneratingBook(true); setGeneratedBookUrl(null); setError('');
         setGenerationStatus('Generating draft content for editor...');
         try {
-            const response = await fetch(`${API_BASE_URL}/api/generate-text-content`, {
+            const response = await fetch('http://127.0.0.1:5000/api/generate-text-content', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ outline: outlineData }),
@@ -214,7 +212,7 @@ const EbookEngine = () => {
         setIsGeneratingBook(true); setGeneratedBookUrl(null); setError('');
         setGenerationStatus('Assembling your final PDF...');
         try {
-            const response = await fetch(`${API_BASE_URL}/api/generate-full-ebook`, {
+            const response = await fetch('http://127.0.0.1:5000/api/generate-full-ebook', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -281,7 +279,7 @@ const EbookEngine = () => {
                                 <>
                                     <Icon name="check" className="w-12 h-12 mx-auto text-green-400 mb-4" />
                                     <h2 className="text-2xl font-bold text-white mb-2">{generationStatus}</h2>
-                                    <a href={`${API_BASE_URL}${generatedBookUrl}`} download className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl py-4 px-8 rounded-md inline-block">
+                                    <a href={`http://127.0.0.1:5000${generatedBookUrl}`} download className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl py-4 px-8 rounded-md inline-block">
                                         Download Your E-book!
                                     </a>
                                 </>
@@ -449,7 +447,8 @@ const ViralContentEngine = ({ brandDNA }) => {
     );
 };
 
-// --- MAIN APPLICATION SHELL ---
+
+// --- MODIFIED --- AppShell now handles the collapsible sidebar logic correctly
 const AppShell = () => {
     const [activeView, setActiveView] = useState('ebook_engine');
     const [brandDNA, setBrandDNA] = useState({ tone: 'Educational & Authoritative', audience: '', angle: '', cta: '' });
@@ -458,7 +457,7 @@ const AppShell = () => {
     const NavLink = ({ viewName, icon, children, isExpanded }) => (
         <button onClick={() => setActiveView(viewName)} className={`flex items-center space-x-3 w-full text-left px-3 py-2.5 rounded-lg transition-colors ${activeView === viewName ? 'bg-purple-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>
             <Icon name={icon} />
-            <span className={`whitespace-nowrap transition-opacity duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>{children}</span>
+            <span className={`whitespace-nowrap transition-opacity duration-200 ${isSidebarExpanded ? 'opacity-100' : 'opacity-0'}`}>{children}</span>
         </button>
     );
 
