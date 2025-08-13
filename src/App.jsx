@@ -6,6 +6,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './editor-styles.css';
 
+// --- MODIFIED --- Define the API_URL using environment variables
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
+
 // --- ICONS ---
 const Icon = ({ name, className = "w-6 h-6" }) => {
     // --- MODIFIED --- Added 'menu' icon
@@ -145,7 +148,8 @@ const EbookEngine = () => {
         setCoverPreview(null); setCoverImagePath(null); setCurrentView('customize'); setEbookContent(null);
         if(fileInputRef.current) { fileInputRef.current.value = ""; }
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/generate-outline', {
+            // --- MODIFIED --- Use the API_URL variable
+            const response = await fetch(`${API_URL}/api/generate-outline`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topic, audience }),
@@ -166,7 +170,8 @@ const EbookEngine = () => {
         const formData = new FormData();
         formData.append('coverImage', file);
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/upload-cover', {
+            // --- MODIFIED --- Use the API_URL variable
+            const response = await fetch(`${API_URL}/api/upload-cover`, {
                 method: 'POST',
                 body: formData,
             });
@@ -189,7 +194,8 @@ const EbookEngine = () => {
         setIsGeneratingBook(true); setGeneratedBookUrl(null); setError('');
         setGenerationStatus('Generating draft content for editor...');
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/generate-text-content', {
+            // --- MODIFIED --- Use the API_URL variable
+            const response = await fetch(`${API_URL}/api/generate-text-content`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ outline: outlineData }),
@@ -212,7 +218,8 @@ const EbookEngine = () => {
         setIsGeneratingBook(true); setGeneratedBookUrl(null); setError('');
         setGenerationStatus('Assembling your final PDF...');
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/generate-full-ebook', {
+            // --- MODIFIED --- Use the API_URL variable
+            const response = await fetch(`${API_URL}/api/generate-full-ebook`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -279,7 +286,8 @@ const EbookEngine = () => {
                                 <>
                                     <Icon name="check" className="w-12 h-12 mx-auto text-green-400 mb-4" />
                                     <h2 className="text-2xl font-bold text-white mb-2">{generationStatus}</h2>
-                                    <a href={`http://127.0.0.1:5000${generatedBookUrl}`} download className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl py-4 px-8 rounded-md inline-block">
+                                    {/* --- MODIFIED --- Use the API_URL variable for the download link */}
+                                    <a href={`${API_URL}${generatedBookUrl}`} download className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl py-4 px-8 rounded-md inline-block">
                                         Download Your E-book!
                                     </a>
                                 </>
@@ -398,7 +406,8 @@ const ViralContentEngine = ({ brandDNA }) => {
         if (!topic) { setError("Please enter a video topic."); return; }
         setError(''); setIsLoading(true); setCampaignPackage(null);
         try {
-            const response = await fetch(`${API_BASE_URL}/api/generate-viral-content`, {
+            // --- MODIFIED --- Use the API_URL variable
+            const response = await fetch(`${API_URL}/api/generate-viral-content`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ topic, brand_dna: brandDNA }),
