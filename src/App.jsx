@@ -435,46 +435,29 @@ const EbookEngine = ({ user }) => {
 };
 
 // --- VIRAL CONTENT ENGINE COMPONENT ---
+// --- In App.jsx, replace the entire ViralContentEngine component with this ---
+
 const ViralContentEngine = ({ user, brandDNA }) => {
     const [topic, setTopic] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [campaignPackage, setCampaignPackage] = useState(null);
     
-    // THIS IS THE CORRECTED PARSING LOGIC for the new premium output
+    // This new parser is simplified to match the new backend output
     const parseCampaignPackage = (responseText) => {
-        const campaigns = responseText.split(/---CAMPAIGN_\d_START---/).slice(1);
-        
-        return campaigns.map(campaignText => {
-            const campaignData = {};
-            const titleMatch = campaignText.match(/CAMPAIGN_TITLE:(.*)/);
-            campaignData.title = titleMatch ? titleMatch[1].trim() : 'Untitled Campaign';
+        const script1Match = responseText.match(/---SCRIPT_1---([\s\S]*?)---SCRIPT_1_END---/);
+        const script2Match = responseText.match(/---SCRIPT_2---([\s\S]*?)---SCRIPT_2_END---/);
+        const script3Match = responseText.match(/---SCRIPT_3---([\s\S]*?)---SCRIPT_3_END---/);
+        const captionMatch = responseText.match(/---INSTAGRAM_CAPTION---([\s\S]*?)---INSTAGRAM_CAPTION_END---/);
+        const hashtagsMatch = responseText.match(/---HASHTAGS---([\s\S]*?)---HASHTAGS_END---/);
 
-            const rationaleMatch = campaignText.match(/STRATEGIC_RATIONALE:([\s\S]*?)---/);
-            campaignData.rationale = rationaleMatch ? rationaleMatch[1].trim() : '';
-
-            const hooksMatch = campaignText.match(/---HOOKS---([\s\S]*?)---/);
-            if (hooksMatch) {
-                campaignData.hooks = hooksMatch[1].trim().split('\n').map(s => s.replace(/^[-\*]\s*/, '')).filter(line => line.trim() !== '');
-            }
-
-            // Corrected to find SCRIPT_BREAKDOWN instead of YOUTUBE_SCRIPT
-            const scriptMatch = campaignText.match(/---SCRIPT_BREAKDOWN---([\s\S]*?)---/);
-            campaignData.script = scriptMatch ? scriptMatch[1].trim() : 'Script not found.';
-            
-            const visualsMatch = campaignText.match(/---VISUAL_IDEAS---([\s\S]*?)---/);
-            if (visualsMatch) {
-                campaignData.visuals = visualsMatch[1].trim().split('\n').map(s => s.replace(/^[-\*]\s*/, '')).filter(line => line.trim() !== '');
-            }
-            
-            const instaMatch = campaignText.match(/---INSTAGRAM_CAPTION---([\s\S]*?)---/);
-            campaignData.instagramCaption = instaMatch ? instaMatch[1].trim() : '';
-
-            const hashtagsMatch = campaignText.match(/---HASHTAGS---([\s\S]*?)---CAMPAIGN_\d_END---/);
-            campaignData.hashtags = hashtagsMatch ? hashtagsMatch[1].trim() : '';
-            
-            return campaignData;
-        });
+        return {
+            script1: script1Match ? script1Match[1].trim() : '',
+            script2: script2Match ? script2Match[1].trim() : '',
+            script3: script3Match ? script3Match[1].trim() : '',
+            caption: captionMatch ? captionMatch[1].trim() : '',
+            hashtags: hashtagsMatch ? hashtagsMatch[1].trim() : '',
+        };
     };
 
     const handleGenerate = async () => {
@@ -506,23 +489,19 @@ const ViralContentEngine = ({ user, brandDNA }) => {
     return (
         <div>
             <h1 className="text-3xl font-bold text-white mb-2">The Viral Script Engine</h1>
-            <p className="text-gray-400 mb-8">Enter one idea. Get three complete, strategy-driven video scripts.</p>
+            <p className="text-gray-400 mb-8">Enter one idea. Get three proven viral scripts, ready to shoot.</p>
             <div className="space-y-6 bg-gray-800/50 p-6 rounded-xl border border-gray-700"> <div> <label className="block text-sm font-medium text-gray-300 mb-2">Video Topic</label> <input type="text" value={topic} onChange={e => setTopic(e.target.value)} placeholder="e.g., Why 99% of people are wrong about coffee" className="w-full bg-gray-700 border-gray-600 rounded-md p-2" /> </div> <div className="text-right"> <button onClick={handleGenerate} disabled={isLoading} className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 px-6 rounded-md"> {isLoading ? <span className="flex items-center justify-center"><Icon name="loader" className="mr-2" /> Generating...</span> : "Generate Viral Scripts"} </button> </div> </div> {error && <div className="mt-6 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-300">{error}</div>} {isLoading && <div className="text-center py-12"><Icon name="loader" className="w-12 h-12 mx-auto text-purple-400" /></div>}
+            
             {campaignPackage && (
                  <div className="mt-8 space-y-8">
-                    {campaignPackage.map((campaign, index) => (
-                        <div key={index} className="p-6 bg-gray-800/50 rounded-2xl border border-gray-700">
-                           <h2 className="text-2xl font-bold text-center mb-6 text-pink-400">{campaign.title}</h2>
-                           <div className="space-y-6">
-                               {campaign.rationale && <CampaignDisplayCard title="Strategic Rationale">{campaign.rationale}</CampaignDisplayCard>}
-                               {campaign.hooks && <CampaignDisplayCard title="Viral Hooks"><ul className="list-disc list-inside space-y-2">{campaign.hooks.map((hook, i) => <li key={i}>{hook}</li>)}</ul></CampaignDisplayCard>}
-                               {campaign.script && <CampaignDisplayCard title="Full Script Breakdown">{campaign.script}</CampaignDisplayCard>}
-                               {campaign.visuals && <CampaignDisplayCard title="Visual Ideas"><ul className="list-disc list-inside space-y-2">{campaign.visuals.map((visual, i) => <li key={i}>{visual}</li>)}</ul></CampaignDisplayCard>}
-                               {campaign.instagramCaption && <CampaignDisplayCard title="Instagram Caption">{campaign.instagramCaption}</CampaignDisplayCard>}
-                               {campaign.hashtags && <CampaignDisplayCard title="Hashtags">{campaign.hashtags}</CampaignDisplayCard>}
-                           </div>
-                        </div>
-                    ))}
+                    <h2 className="text-2xl font-bold text-center text-pink-400">Your Viral Scripts are Ready!</h2>
+                    <div className="space-y-6">
+                        {campaignPackage.script1 && <CampaignDisplayCard title="Script 1: The 'Problem/Agitate/Solve' Angle">{campaignPackage.script1}</CampaignDisplayCard>}
+                        {campaignPackage.script2 && <CampaignDisplayCard title="Script 2: The 'Contrarian' Angle">{campaignPackage.script2}</CampaignDisplayCard>}
+                        {campaignPackage.script3 && <CampaignDisplayCard title="Script 3: The 'Quick Tip' Angle">{campaignPackage.script3}</CampaignDisplayCard>}
+                        {campaignPackage.caption && <CampaignDisplayCard title="Instagram Caption">{campaignPackage.caption}</CampaignDisplayCard>}
+                        {campaignPackage.hashtags && <CampaignDisplayCard title="Hashtags">{campaignPackage.hashtags}</CampaignDisplayCard>}
+                    </div>
                  </div>
             )}
         </div>
