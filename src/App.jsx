@@ -487,11 +487,13 @@ const ViralContentEngine = ({ user, brandDNA }) => {
     };
 
     const CampaignDisplayCard = ({ title, children }) => (
-        <div className="p-6 bg-gray-900/50 rounded-xl border border-gray-700">
-            <h3 className="text-xl font-bold text-purple-300 mb-4">{title}</h3>
-            <div className="text-gray-300 whitespace-pre-wrap font-mono text-sm">{children}</div>
+    <div className="p-6 bg-gray-900/50 rounded-xl border border-gray-700">
+        <h3 className="text-xl font-bold text-purple-300 mb-4">{title}</h3>
+        <div className="text-gray-300 whitespace-pre-wrap text-base leading-relaxed" style={{ fontFamily: 'Merriweather, serif' }}>
+            {children}
         </div>
-    );
+    </div>
+);
     return (
         <div>
             <h1 className="text-3xl font-bold text-white mb-2">The Viral Content Engine</h1>
