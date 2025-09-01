@@ -435,6 +435,12 @@ const EbookEngine = ({ user }) => {
 };
 
 // --- VIRAL CONTENT ENGINE COMPONENT ---
+
+
+// --- In App.jsx, replace the entire ViralContentEngine component with this ---
+
+// --- In App.jsx, replace the entire ViralContentEngine component with this ---
+
 // --- In App.jsx, replace the entire ViralContentEngine component with this ---
 
 const ViralContentEngine = ({ user, brandDNA }) => {
@@ -507,7 +513,6 @@ const ViralContentEngine = ({ user, brandDNA }) => {
         </div>
     );
 };
-
 
 // --- AppShell ---
 const AppShell = ({ user }) => {
